@@ -89,13 +89,15 @@ class InputSource {
         try select(inputSource)
     }
 
-    fileprivate static func selectNextInputSource() throws {
+    fileprivate static func selectNextInputSource() throws -> (before: TISInputSource, after: TISInputSource) {
+        let before = currentInputSource
         guard let currentIndex = selectCapableInputSources.firstIndex(of: currentInputSource) else {
             throw ImSwitchError.unknown
         }
         let nextIndex = (currentIndex + 1) % selectCapableInputSources.count
         let nextInputSource = selectCapableInputSources[nextIndex]
         try select(nextInputSource)
+        return (before, nextInputSource)
     }
 }
 
@@ -136,8 +138,14 @@ extension ImSwitch {
         static let configuration =
             CommandConfiguration(abstract: "Select the next input source.")
 
+        @Flag(name: .shortAndLong)
+        var verbose = false
+
         func run() throws {
-            try InputSource.selectNextInputSource()
+            let (before, after) = try InputSource.selectNextInputSource()
+            if verbose {
+                print("\(before.localizedName) -> \(after.localizedName)")
+            }
         }
     }
 }
