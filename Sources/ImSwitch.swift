@@ -102,7 +102,7 @@ class InputSource {
 extension ImSwitch {
     struct List: ParsableCommand {
         static let configuration =
-            CommandConfiguration(abstract: "") // TODO
+            CommandConfiguration(abstract: "List of available input sources.")
 
         @Flag(name: .shortAndLong)
         var verbose = false
@@ -122,7 +122,7 @@ extension ImSwitch {
 
     struct Select: ParsableCommand {
         static let configuration =
-            CommandConfiguration(abstract: "") // TODO
+            CommandConfiguration(abstract: "Switch to the specified input source.")
 
         @Argument(help: "Input Source ID (e.g. com.apple.keylayout.ABC).")
         var id: String
@@ -134,7 +134,7 @@ extension ImSwitch {
 
     struct Next: ParsableCommand {
         static let configuration =
-            CommandConfiguration(abstract: "") // TODO
+            CommandConfiguration(abstract: "Select the next input source.")
 
         func run() throws {
             try InputSource.selectNextInputSource()
