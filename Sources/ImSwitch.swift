@@ -76,13 +76,17 @@ class InputSource {
             }
     }
 
+    private static func select(_ inputSource: TISInputSource) throws {
+        if TISSelectInputSource(inputSource) != noErr {
+            throw ImSwitchError.failedToChangeInputSource
+        }
+    }
+
     fileprivate static func select(_ id: String) throws {
         guard let inputSource = selectCapableInputSources.filter({ $0.id == id }).first else {
             throw ImSwitchError.specifiedInputSourceIsNotAvailable
         }
-        if TISSelectInputSource(inputSource) != noErr {
-            throw ImSwitchError.failedToChangeInputSource
-        }
+        try select(inputSource)
     }
 
     fileprivate static func selectNextInputSource() throws {
@@ -91,9 +95,7 @@ class InputSource {
         }
         let nextIndex = (currentIndex + 1) % selectCapableInputSources.count
         let nextInputSource = selectCapableInputSources[nextIndex]
-        if TISSelectInputSource(nextInputSource) != noErr {
-            throw ImSwitchError.failedToChangeInputSource
-        }
+        try select(nextInputSource)
     }
 }
 
